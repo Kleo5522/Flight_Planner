@@ -3,7 +3,7 @@ Simple Web Api application
 
 ## How To Launch application
 
-1) Import project in Visual Sutdio
+1) Import project in Visual Studio
 2) Build project
 3) Run application
 
