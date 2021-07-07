@@ -58,5 +58,14 @@ namespace FlightPlanner.Services.Services
 
             return result;
         }
+
+        public async Task DeleteAllFlightsAsync()
+        {
+            Context.Flights.RemoveRange(Context.Flights);
+            Context.Airports.RemoveRange(Context.Airports);
+            await Context.SaveChangesAsync();
+        }
     }
 }
+    
+

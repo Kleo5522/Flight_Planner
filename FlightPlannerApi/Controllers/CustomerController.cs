@@ -10,40 +10,40 @@ namespace FlightPlannerApi.Controllers
 {
     public class CustomerController : ApiController
     {
-        public IFlightService FlightService;  //nevajag publiskos Servisus????
-        public IAirportService AirportService;
-        public readonly IMapper Mapper;
-        public readonly IValidation Validation;
+        private readonly IFlightService _flightService;
+        private readonly IAirportService _airportService;
+        private readonly IMapper _mapper;
+        private readonly IValidation _validation;
 
         public CustomerController(IFlightService flightService, IAirportService airportService, IMapper mapper, IValidation validation)
         {
-            FlightService = flightService;
-            AirportService = airportService;
-            Mapper = mapper;
-            Validation = validation;
+            _flightService = flightService;
+            _airportService = airportService;
+            _mapper = mapper;
+            _validation = validation;
         }
 
         [Route("api/airports"), HttpGet]
         public async Task<IHttpActionResult> SearchAirportsAsync(string search)
         {
-            var foundAirports = await AirportService.SearchAirportsByPhraseAsync(search);
-            var airportsList = foundAirports.Select(airport => Mapper.Map(airport, new AirportResponse())).ToList();
+            var foundAirports = await _airportService.SearchAirportsByPhraseAsync(search);
+            var airportsList = foundAirports.Select(airport => _mapper.Map(airport, new AirportResponse())).ToList();
             return airportsList.Count != 0 ? Ok(airportsList) : (IHttpActionResult) NotFound();
         }
 
         [Route("api/flights/search"), HttpPost]
         public async Task<IHttpActionResult> SearchFlightsAsync(SearchFlightRequest search)
         {
-            if (Validation.IsSearchFlightRequestAnyPropertyContainsNullValue(search) ||
-                Validation.IsAirportToAndAirportFromEqual(search.To, search.From)) return BadRequest();
-            return Ok(await FlightService.SearchFlightsReturnPageResultAsync(search));
+            if (_validation.IsSearchFlightRequestAnyPropertyContainsNullValue(search) ||
+                _validation.IsAirportToAndAirportFromEqual(search.To, search.From)) return BadRequest();
+            return Ok(await _flightService.SearchFlightsReturnPageResultAsync(search));
         }
 
         [Route("api/flights/{id}"), HttpGet]
         public async Task<IHttpActionResult> FindFlights(int id)
         {
-            var foundFlight = await FlightService.GetByIdAsync(id);
-            var response = Mapper.Map(foundFlight, new FlightResponse());
+            var foundFlight = await _flightService.GetByIdAsync(id);
+            var response = _mapper.Map(foundFlight, new FlightResponse());
             return foundFlight == null ? (IHttpActionResult) NotFound() : Ok(response);
         }
     }

@@ -13,5 +13,6 @@ namespace FlightPlanner.Services.Interfaces
         Task<Flight> GetFlightByIdAsync(int id);
         Task DeleteFlightByIdAsync(int id);
         Task<PageResult<Flight>> SearchFlightsReturnPageResultAsync(SearchFlightRequest searchFlight);
+        Task DeleteAllFlightsAsync();
     }
 }

@@ -1,25 +1,23 @@
-﻿using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Http;
 using FlightPlanner.Data;
-using WebGrease.Css.Extensions;
+using FlightPlanner.Services.Interfaces;
 
 namespace FlightPlannerApi.Controllers
 {
     public class TestingApiController : ApiController
     {
+        private readonly IFlightService _flightService;
+        public TestingApiController(IFlightService flightService)
+        {
+            _flightService = flightService;
+        }
+
         [Route("testing-api/clear")]
         [HttpPost]
         public async Task<IHttpActionResult> ClearAsync()
         {
-            using (var context = new FlightPlannerDbContext())
-            {
-                context.Flights.RemoveRange(context.Flights);
-                context.Airports.RemoveRange(context.Airports);
-                await context.SaveChangesAsync();
-            }
-
+            await _flightService.DeleteAllFlightsAsync();
             return Ok();
         }
     }
