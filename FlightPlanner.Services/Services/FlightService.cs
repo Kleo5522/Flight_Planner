@@ -17,10 +17,7 @@ namespace FlightPlanner.Services.Services
 
         public async Task AddFlightAsync(Flight flight)
         {
-            if (await IsFlightExistAsync(flight) == false)
-            {
-                await base.CreateAsync(flight);
-            }
+            await CreateAsync(flight);
         }
 
         public async Task<bool> IsFlightExistAsync(Flight flight)
@@ -63,5 +60,3 @@ namespace FlightPlanner.Services.Services
         }
     }
 }
-    
-
